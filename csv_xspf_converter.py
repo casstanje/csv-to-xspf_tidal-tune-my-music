@@ -17,19 +17,16 @@ def convert_to_xspf():
     # Prompts the user to select a CSV file
     csv_file = filedialog.askopenfilename(filetypes=[("Comma Separated Values Source File", "*.csv")], title = "Open your playlist CSV file")
 
-    # Prompts the user to name the playlist and XSPF file and choose the directory
-    folder = filedialog.askdirectory(title = "Select the location of your music files")
+    # Prompts the user to choose the folder to place the playlist
+    folder = filedialog.askdirectory(title = "Select where you would like to place your playlists")
 
-    logging.basicConfig(filename="log_" + "wow" + ".txt", encoding="utf-8", level=logging.DEBUG)
-
-
-    # Substitutions to be made in prepend output
-    file_dict = {'insert_folder' : folder, 'insert_playlist_name' : "wow", 'insert_xspf_title' : "wow2"}
+    logging.basicConfig(filename=folder+"/log_" + "csv_to_xspf" + ".txt", encoding="utf-8", level=logging.DEBUG)
+    logging.debug("creation log:")
 
     # after the last line of the CSV has been processed, append:
     playlist_endstop = "\n    </trackList>\n</playlist>"
 
-    track_name = "Example (--Track with /Special/\ Ch*racters...)"
+    track_name = "Example (--Track with /Special/ Ch*racters...)"
     artist_name = "Example Artist With Spaces In Their Name"
     album_name = "Album Name...With Spaces and Ellipses!"
 
@@ -57,11 +54,10 @@ def convert_to_xspf():
                         # Ends the playlist properly.
                         logging.info("Completing playlist...")
                         file.write(playlist_endstop)    
-                logging.debug(playlist_name  + " creation log:")
                 logging.info("Selected CSV file: " + csv_file + "\n")
                 logging.info("Playlist name: " + playlist_name + "\n")
                 playlist_count += 1
-                file_name = "playlist_" + str(playlist_count) + ".xspf"
+                file_name = folder + "/playlist_" + str(playlist_count) + ".xspf"
                 prev_playlist = playlist_name
 
                 # Before processing the CSV, prepend:
@@ -70,9 +66,6 @@ def convert_to_xspf():
                 <title>""" + playlist_name +  """</title>
                 <location>""" + "\"" + folder + "/" + file_name +  "\"" + """</location>
                 <trackList>"""
-
-                # Formats the prepend string properly
-                playlist_prepend = playlist_prepend.format(**file_dict)
             with open(file_name, 'a', encoding='utf-8') as file:
 
                 # Prepend the text from earlier if new playlist
@@ -100,6 +93,7 @@ def convert_to_xspf():
                 track_info = track_info.format(**track_dict)
 
                 file.write(track_info) # Adds the line to the file
+                print("Added track: " + track_name + " to " + playlist_name)
                 log_message_added_track = str("Added track: {insert_track_name} by artist: {insert_artist_name}").format(**track_dict)
                 logging.info(log_message_added_track)   
         #End the last playlist when all songs have been processed
