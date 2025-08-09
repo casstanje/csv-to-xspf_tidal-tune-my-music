@@ -1,2 +1,2 @@
-# csv-to-xspf
-Non-optimized Python program for converting Exportify playlist CSVs into AIMP-style XSPFs. Works best with SpotDL downloads.
+# csv-to-xspf for tidal library exports
+a badly made converter from tidal csv library exports to xspf playlist files. you need to manually delete any existing xspf files in the sele cted export folder, because the script just appends to existing files
